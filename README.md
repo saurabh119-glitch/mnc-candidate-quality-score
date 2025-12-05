@@ -1,8 +1,8 @@
-# Enterprise Candidate Quality Score Engine
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/f4d0ed88-f680-4edc-bdb5-d10ac0f46a26" /># Enterprise Candidate Quality Score Engine
 
 Predicts 12-month job performance from hiring assessment data — helping MNCs reduce bad hires by 30%.
 
-🔗 **Live Demo**: [streamlit link]
+🔗 **Live Demo**: https://mnc-candidate-quality-score-qbrbim8aryp9e5xm3pg4cm.streamlit.app/
 
 ## Business Impact
 - Reduces cost-per-hire by predicting performance risk
