@@ -1,17 +1,7 @@
-# Test imports first
-try:
-    import joblib
-    import numpy as np
-    from sklearn.ensemble import GradientBoostingRegressor
-    print("✅ All libraries loaded successfully!")
-except Exception as e:
-    print(f"❌ Error loading libraries: {e}")
-    raise
 import streamlit as st
 import joblib
 import json
 import numpy as np
-import pandas as pd
 
 # Load model & metrics
 @st.cache_resource
@@ -23,7 +13,7 @@ def load_metrics():
     with open('model_metrics.json', 'r') as f:
         return json.load(f)
 
-model = load_model()
+theta = load_model()
 metrics = load_metrics()
 
 st.set_page_config(page_title="MNC Candidate Quality Score", page_icon="🔍", layout="wide")
@@ -35,7 +25,7 @@ with st.sidebar:
     st.header("🏢 Model Credibility")
     st.metric("Test Accuracy (R²)", f"{metrics['R2']:.2f}")
     st.metric("Avg Error (MAE)", f"{metrics['MAE']:.2f}")
-    st.caption(f"Trained on 10,000 synthetic profiles\nTested on {metrics['Test_Sample_Size']} held-out candidates")
+    st.caption(f"Trained on 10,000 synthetic profiles")
     st.info("✅ Uses only job-relevant signals\n✅ No demographic data\n✅ Audit-ready")
 
 # Main layout
@@ -63,8 +53,12 @@ with col2:
     role_enc = {"L1 - Entry": 0, "L2 - Mid": 1, "L3 - Senior": 2}[role]
     edu_tier = edu[1]
     
-    features = [[exp, edu_tier, coding, behavioral, domain, refs, role_enc]]
-    pred = model.predict(features)[0]
+    # Create input vector (with bias term)
+    features = [1, exp, edu_tier, coding, behavioral, domain, refs, role_enc]
+    pred = np.dot(features, theta)
+    
+    # Clip to 1-5 range
+    pred = max(1.0, min(5.0, pred))
     
     # Visual gauge
     if pred >= 4.0:
@@ -75,19 +69,7 @@ with col2:
         st.error(f"⚠️ **{pred:.1f}/5.0**\n\nPerformance Risk")
     
     st.markdown(f"**Expected 12-mo Rating**\n\n*MAE: ±{metrics['MAE']}*")
-    
-    # Explain key drivers (simple version)
-    st.markdown("### Key Drivers")
-    drivers = sorted([
-        ("Coding Test", coding),
-        ("Behavioral", behavioral),
-        ("Domain Knowledge", domain)
-    ], key=lambda x: x[1], reverse=True)
-    
-    for i, (name, score) in enumerate(drivers[:2]):
-        st.caption(f"{i+1}. {name}: {score}/100")
 
 # Footer
 st.markdown("---")
-
 st.caption("Enterprise AI for Talent | Audit-Ready | Demo Only | [GitHub](https://github.com/yourname/mnc-quality-score)")
