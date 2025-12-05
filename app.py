@@ -1,20 +1,15 @@
 import streamlit as st
-import joblib
 import json
-import numpy as np
 
-# Load model & metrics
-@st.cache_resource
-def load_model():
-    return joblib.load('quality_score_model.pkl')
-
+# Load model from JSON
 @st.cache_data
-def load_metrics():
-    with open('model_metrics.json', 'r') as f:
+def load_model():
+    with open('model.json', 'r') as f:
         return json.load(f)
 
-theta = load_model()
-metrics = load_metrics()
+model = load_model()
+theta = model["theta"]
+metrics = model["metrics"]
 
 st.set_page_config(page_title="MNC Candidate Quality Score", page_icon="🔍", layout="wide")
 st.title("🔍 Enterprise Candidate Quality Score Engine")
@@ -55,7 +50,9 @@ with col2:
     
     # Create input vector (with bias term)
     features = [1, exp, edu_tier, coding, behavioral, domain, refs, role_enc]
-    pred = np.dot(features, theta)
+    
+    # Predict using dot product (no numpy needed!)
+    pred = sum(features[i] * theta[i] for i in range(len(features)))
     
     # Clip to 1-5 range
     pred = max(1.0, min(5.0, pred))
