@@ -2,7 +2,6 @@
 
 Predicts 12-month job performance from hiring assessment data — helping MNCs reduce bad hires by 30%.
 
-🔗 **Live Demo**: https://mnc-candidate-quality-score-qbrbim8aryp9e5xm3pg4cm.streamlit.app/
 
 ## Business Impact
 - Reduces cost-per-hire by predicting performance risk
