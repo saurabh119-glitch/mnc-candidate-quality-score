@@ -1,3 +1,12 @@
+# Test imports first
+try:
+    import joblib
+    import numpy as np
+    from sklearn.ensemble import GradientBoostingRegressor
+    print("✅ All libraries loaded successfully!")
+except Exception as e:
+    print(f"❌ Error loading libraries: {e}")
+    raise
 import streamlit as st
 import joblib
 import json
@@ -80,4 +89,5 @@ with col2:
 
 # Footer
 st.markdown("---")
+
 st.caption("Enterprise AI for Talent | Audit-Ready | Demo Only | [GitHub](https://github.com/yourname/mnc-quality-score)")
